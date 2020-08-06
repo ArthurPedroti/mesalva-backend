@@ -19,7 +19,7 @@ class Ticket {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  provider: User;
+  user: User;
 
   @Column()
   client: string;
