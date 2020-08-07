@@ -15,7 +15,8 @@ export default class UserTicketsController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const { ticket_id, client, equipment, type, description } = request.body;
+    const { ticket_id } = request.params;
+    const { client, equipment, type, description } = request.body;
 
     const updateTicket = container.resolve(UpdateUserTicketsService);
 

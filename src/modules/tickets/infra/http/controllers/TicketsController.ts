@@ -55,8 +55,8 @@ export default class TicketsController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
+    const { ticket_id } = request.params;
     const {
-      ticket_id,
       client,
       classification,
       equipment,

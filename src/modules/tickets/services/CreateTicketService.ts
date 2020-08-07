@@ -29,7 +29,7 @@ class CreateTicketService {
     description,
   }: IRequest): Promise<Ticket> {
     let statusDefault = 'Não atendido';
-    let classificationDefault = 'Sem calssificação';
+    let classificationDefault = 'Sem classificação';
 
     if (status) {
       statusDefault = status;

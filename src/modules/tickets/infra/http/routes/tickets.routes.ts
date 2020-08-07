@@ -26,10 +26,12 @@ ticketsRouter.post(
 );
 
 ticketsRouter.put(
-  '/',
+  '/:ticket_id',
   celebrate({
-    [Segments.BODY]: {
+    [Segments.PARAMS]: {
       ticket_id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
       client: Joi.string(),
       classification: Joi.string(),
       equipment: Joi.string(),
@@ -42,10 +44,12 @@ ticketsRouter.put(
 );
 
 ticketsRouter.put(
-  '/me',
+  '/:ticket_id/me',
   celebrate({
-    [Segments.BODY]: {
+    [Segments.PARAMS]: {
       ticket_id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
       client: Joi.string(),
       equipment: Joi.string(),
       type: Joi.string(),
