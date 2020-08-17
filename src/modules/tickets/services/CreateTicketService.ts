@@ -4,7 +4,9 @@ import Ticket from '../infra/typeorm/entities/Ticket';
 
 interface IRequest {
   user_id: string;
-  client: string;
+  client_id: string;
+  client_name: string;
+  client_cnpj: string;
   classification: string;
   equipment: string;
   type: string;
@@ -21,7 +23,9 @@ class CreateTicketService {
 
   public async execute({
     user_id,
-    client,
+    client_id,
+    client_name,
+    client_cnpj,
     classification,
     equipment,
     type,
@@ -41,7 +45,9 @@ class CreateTicketService {
 
     const ticket = this.ticketsRepository.create({
       user_id,
-      client,
+      client_id,
+      client_name,
+      client_cnpj,
       classification: classificationDefault,
       equipment,
       type,

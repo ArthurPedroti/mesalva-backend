@@ -31,7 +31,9 @@ export default class TicketsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
     const {
-      client,
+      client_id,
+      client_name,
+      client_cnpj,
       classification,
       equipment,
       type,
@@ -43,7 +45,9 @@ export default class TicketsController {
 
     const ticket = await createTicket.execute({
       user_id,
-      client,
+      client_id,
+      client_name,
+      client_cnpj,
       classification,
       equipment,
       type,
@@ -57,7 +61,9 @@ export default class TicketsController {
   public async update(request: Request, response: Response): Promise<Response> {
     const { ticket_id } = request.params;
     const {
-      client,
+      client_id,
+      client_name,
+      client_cnpj,
       classification,
       equipment,
       type,
@@ -69,7 +75,9 @@ export default class TicketsController {
 
     const ticket = await updateTicket.execute({
       ticket_id,
-      client,
+      client_id,
+      client_name,
+      client_cnpj,
       classification,
       equipment,
       type,

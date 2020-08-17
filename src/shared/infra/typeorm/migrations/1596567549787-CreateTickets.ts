@@ -24,7 +24,15 @@ export default class CreateTickets1596567549787 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'client',
+            name: 'client_id',
+            type: 'varchar',
+          },
+          {
+            name: 'client_name',
+            type: 'varchar',
+          },
+          {
+            name: 'client_cnpj',
             type: 'varchar',
           },
           {

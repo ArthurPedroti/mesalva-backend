@@ -5,7 +5,9 @@ import Ticket from '../infra/typeorm/entities/Ticket';
 
 interface IRequest {
   ticket_id: string;
-  client: string;
+  client_id: string;
+  client_name: string;
+  client_cnpj: string;
   classification: string;
   equipment: string;
   type: string;
@@ -22,7 +24,9 @@ class UpdateTicketsService {
 
   public async execute({
     ticket_id,
-    client,
+    client_id,
+    client_name,
+    client_cnpj,
     classification,
     equipment,
     type,
@@ -35,7 +39,9 @@ class UpdateTicketsService {
       throw new AppError('Ticket does not exits');
     }
 
-    ticket.client = client;
+    ticket.client_id = client_id;
+    ticket.client_name = client_name;
+    ticket.client_cnpj = client_cnpj;
     ticket.classification = classification;
     ticket.equipment = equipment;
     ticket.type = type;

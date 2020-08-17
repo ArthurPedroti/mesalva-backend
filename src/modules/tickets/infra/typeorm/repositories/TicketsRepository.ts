@@ -38,7 +38,9 @@ class TicketsRepository implements ITicketsRepository {
 
   public async create({
     user_id,
-    client,
+    client_id,
+    client_name,
+    client_cnpj,
     classification,
     equipment,
     type,
@@ -47,7 +49,9 @@ class TicketsRepository implements ITicketsRepository {
   }: ICreateTicketDTO): Promise<Ticket> {
     const ticket = this.ormRepository.create({
       user_id,
-      client,
+      client_id,
+      client_name,
+      client_cnpj,
       classification,
       equipment,
       type,

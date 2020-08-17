@@ -16,7 +16,9 @@ ticketsRouter.post(
   '/',
   celebrate({
     [Segments.BODY]: {
-      client: Joi.string().required(),
+      client_id: Joi.string().required(),
+      client_name: Joi.string().required(),
+      client_cnpj: Joi.string().required(),
       equipment: Joi.string().required(),
       type: Joi.string().required(),
       description: Joi.string().required(),
@@ -32,7 +34,9 @@ ticketsRouter.put(
       ticket_id: Joi.string().uuid().required(),
     },
     [Segments.BODY]: {
-      client: Joi.string(),
+      client_id: Joi.string().required(),
+      client_name: Joi.string().required(),
+      client_cnpj: Joi.string().required(),
       classification: Joi.string(),
       equipment: Joi.string(),
       type: Joi.string(),
@@ -50,7 +54,9 @@ ticketsRouter.put(
       ticket_id: Joi.string().uuid().required(),
     },
     [Segments.BODY]: {
-      client: Joi.string(),
+      client_id: Joi.string().required(),
+      client_name: Joi.string().required(),
+      client_cnpj: Joi.string().required(),
       equipment: Joi.string(),
       type: Joi.string(),
       description: Joi.string(),

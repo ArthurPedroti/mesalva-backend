@@ -22,7 +22,13 @@ class Ticket {
   user: User;
 
   @Column()
-  client: string;
+  client_id: string;
+
+  @Column()
+  client_name: string;
+
+  @Column()
+  client_cnpj: string;
 
   @Column()
   classification: string;
