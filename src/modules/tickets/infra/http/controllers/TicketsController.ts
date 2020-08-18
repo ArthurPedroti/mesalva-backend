@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import CreateTicketService from '@modules/tickets/services/CreateTicketService';
 import ListTicketsService from '@modules/tickets/services/ListTicketsService';
 import UpdateTicketsService from '@modules/tickets/services/UpdateTicketsService';
+import DeleteTicketsService from '@modules/tickets/services/DeleteTicketService';
 
 export default class TicketsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -86,5 +87,17 @@ export default class TicketsController {
     });
 
     return response.json(ticket);
+  }
+
+  public async delete(request: Request, response: Response): Promise<Response> {
+    const { ticket_id } = request.params;
+
+    const deleteTicket = container.resolve(DeleteTicketsService);
+
+    await deleteTicket.execute({
+      ticket_id,
+    });
+
+    return response.status(204).send();
   }
 }

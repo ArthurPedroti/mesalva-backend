@@ -23,6 +23,10 @@ export default class CreateUsers1587775378047 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'role',
+            type: 'varchar',
+          },
+          {
             name: 'password',
             type: 'varchar',
           },

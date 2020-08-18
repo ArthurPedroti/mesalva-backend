@@ -7,4 +7,5 @@ export default interface ITicketsRepository {
   findById(ticket_id: string): Promise<Ticket | undefined>;
   findAll(status: object[]): Promise<Ticket[]>;
   save(ticket: Ticket): Promise<Ticket>;
+  delete(ticket: Ticket): Promise<void>;
 }

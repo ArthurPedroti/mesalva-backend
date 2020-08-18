@@ -34,9 +34,9 @@ ticketsRouter.put(
       ticket_id: Joi.string().uuid().required(),
     },
     [Segments.BODY]: {
-      client_id: Joi.string().required(),
-      client_name: Joi.string().required(),
-      client_cnpj: Joi.string().required(),
+      client_id: Joi.string(),
+      client_name: Joi.string(),
+      client_cnpj: Joi.string(),
       classification: Joi.string(),
       equipment: Joi.string(),
       type: Joi.string(),
@@ -47,6 +47,16 @@ ticketsRouter.put(
   ticketsController.update,
 );
 
+ticketsRouter.delete(
+  '/:ticket_id',
+  celebrate({
+    [Segments.PARAMS]: {
+      ticket_id: Joi.string().uuid().required(),
+    },
+  }),
+  ticketsController.delete,
+);
+
 ticketsRouter.put(
   '/:ticket_id/me',
   celebrate({
@@ -54,9 +64,9 @@ ticketsRouter.put(
       ticket_id: Joi.string().uuid().required(),
     },
     [Segments.BODY]: {
-      client_id: Joi.string().required(),
-      client_name: Joi.string().required(),
-      client_cnpj: Joi.string().required(),
+      client_id: Joi.string(),
+      client_name: Joi.string(),
+      client_cnpj: Joi.string(),
       equipment: Joi.string(),
       type: Joi.string(),
       description: Joi.string(),

@@ -63,6 +63,10 @@ class TicketsRepository implements ITicketsRepository {
 
     return ticket;
   }
+
+  public async delete(ticket: Ticket): Promise<void> {
+    await this.ormRepository.remove(ticket);
+  }
 }
 
 export default TicketsRepository;
