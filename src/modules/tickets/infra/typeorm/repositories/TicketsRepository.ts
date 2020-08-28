@@ -21,7 +21,10 @@ class TicketsRepository implements ITicketsRepository {
   }
 
   public async findByUser(user_id: string): Promise<Ticket[]> {
-    const tickets = await this.ormRepository.find({ where: { user_id } });
+    const tickets = await this.ormRepository.find({
+      where: { user_id },
+      relations: ['user'],
+    });
 
     return tickets;
   }
@@ -31,6 +34,7 @@ class TicketsRepository implements ITicketsRepository {
 
     const tickets = await this.ormRepository.find({
       where: statusArray,
+      relations: ['user'],
     });
 
     return tickets;
