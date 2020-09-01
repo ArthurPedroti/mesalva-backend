@@ -3,14 +3,17 @@ import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAut
 import { celebrate, Segments, Joi } from 'celebrate';
 import TicketsController from '../controllers/TicketsController';
 import UserTicketsController from '../controllers/UserTicketsController';
+import ClientsController from '../controllers/ClientsController';
 
 const ticketsRouter = Router();
 const ticketsController = new TicketsController();
 const userTicketsController = new UserTicketsController();
+const clientsController = new ClientsController();
 
 ticketsRouter.use(ensureAuthenticated);
 
 ticketsRouter.get('/', ticketsController.index);
+ticketsRouter.get('/clients', clientsController.index);
 
 ticketsRouter.post(
   '/',
