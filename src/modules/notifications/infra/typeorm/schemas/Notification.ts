@@ -13,6 +13,9 @@ class Notification {
   id: ObjectID;
 
   @Column()
+  title: string;
+
+  @Column()
   content: string;
 
   @Column('uuid')

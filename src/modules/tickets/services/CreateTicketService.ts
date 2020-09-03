@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 import Ticket from '../infra/typeorm/entities/Ticket';
 
@@ -19,6 +20,9 @@ class CreateTicketService {
   constructor(
     @inject('TicketsRepository')
     private ticketsRepository: ITicketsRepository,
+
+    @inject('NotificationsRepository')
+    private notificationsRepository: INotificationsRepository,
   ) {}
 
   public async execute({
@@ -43,7 +47,7 @@ class CreateTicketService {
       classificationDefault = classification;
     }
 
-    const ticket = this.ticketsRepository.create({
+    const ticket = await this.ticketsRepository.create({
       user_id,
       client_id,
       client_name,
@@ -53,6 +57,12 @@ class CreateTicketService {
       type,
       status: statusDefault,
       description,
+    });
+
+    await this.notificationsRepository.create({
+      role: 'admin',
+      title: 'Novo chamado!',
+      content: `Cliente: ${client_name}`,
     });
 
     return ticket;

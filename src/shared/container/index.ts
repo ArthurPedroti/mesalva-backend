@@ -9,7 +9,7 @@ import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepo
 import IUserTokensRepository from '@modules/users/repositories/IUserTokensRepository';
 import UserTokensRepository from '@modules/users/infra/typeorm/repositories/UserTokensRepository';
 
-import INotificationRepository from '@modules/notifications/repositories/INotificationsRepository';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import NotificationsRepository from '@modules/notifications/infra/typeorm/repositories/NotificationsRepository';
 
 import ITicketsRepository from '@modules/tickets/repositories/ITicketsRepository';
@@ -25,7 +25,7 @@ container.registerSingleton<IUserTokensRepository>(
   UserTokensRepository,
 );
 
-container.registerSingleton<INotificationRepository>(
+container.registerSingleton<INotificationsRepository>(
   'NotificationsRepository',
   NotificationsRepository,
 );
