@@ -11,7 +11,9 @@ class TicketsRepository implements ITicketsRepository {
   }
 
   public async findById(ticket_id: string): Promise<Ticket | undefined> {
-    const ticket = await this.ormRepository.findOne(ticket_id);
+    const ticket = await this.ormRepository.findOne(ticket_id, {
+      relations: ['user'],
+    });
 
     return ticket;
   }

@@ -60,9 +60,9 @@ class CreateTicketService {
     });
 
     await this.notificationsRepository.create({
-      role: 'admin',
       title: 'Novo chamado!',
       content: `Cliente: ${client_name}`,
+      recipient_role: 'admin',
     });
 
     return ticket;

@@ -1,6 +1,6 @@
 export default interface ICreateNotificationDTO {
   title: string;
   content: string;
-  role?: string;
-  recipient_id?: string;
+  recipient_role?: string;
+  recipient_ids?: string[];
 }

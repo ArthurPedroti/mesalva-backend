@@ -16,18 +16,19 @@ class NotificationsRepository implements INotificationsRepository {
   public async create({
     title,
     content,
-    role,
-    recipient_id,
+    recipient_role,
+    recipient_ids,
   }: ICreateNotificationDTO): Promise<Notification> {
     const notification = this.ormRepository.create({
       title,
       content,
-      recipient_id,
+      recipient_role,
+      recipient_ids,
     });
 
     await this.ormRepository.save(notification);
 
-    if (role) {
+    if (recipient_role) {
       await axios({
         method: 'POST',
         url: 'https://onesignal.com/api/v1/notifications',
@@ -44,7 +45,7 @@ class NotificationsRepository implements INotificationsRepository {
               field: 'tag',
               key: 'role',
               realation: '=',
-              value: role,
+              value: recipient_role,
             },
           ],
         },
@@ -61,10 +62,9 @@ class NotificationsRepository implements INotificationsRepository {
           app_id: process.env.ONE_SIGNAL_APP_ID,
           contents: { en: content },
           headings: { en: title },
-          include_external_user_ids: [recipient_id],
+          include_external_user_ids: recipient_ids,
         },
       });
-      // console.log(resp);
     }
 
     return notification;

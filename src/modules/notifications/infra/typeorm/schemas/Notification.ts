@@ -18,8 +18,11 @@ class Notification {
   @Column()
   content: string;
 
+  @Column()
+  recipient_role: string;
+
   @Column('uuid')
-  recipient_id: string;
+  recipient_ids: string[];
 
   @Column({ default: false })
   read: boolean;

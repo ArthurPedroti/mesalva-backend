@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 import Ticket from '../infra/typeorm/entities/Ticket';
 
@@ -20,6 +21,9 @@ class UpdateTicketsService {
   constructor(
     @inject('TicketsRepository')
     private ticketsRepository: ITicketsRepository,
+
+    @inject('NotificationsRepository')
+    private notificationsRepository: INotificationsRepository,
   ) {}
 
   public async execute({
@@ -39,6 +43,14 @@ class UpdateTicketsService {
       throw new AppError('Ticket does not exits');
     }
 
+    let clientNotificationName;
+
+    if (client_name) {
+      clientNotificationName = client_name;
+    } else {
+      clientNotificationName = ticket.client_name;
+    }
+
     ticket.client_id = client_id;
     ticket.client_name = client_name;
     ticket.client_cnpj = client_cnpj;
@@ -48,7 +60,21 @@ class UpdateTicketsService {
     ticket.status = status;
     ticket.description = description;
 
-    return this.ticketsRepository.save(ticket);
+    const updatedTicket = await this.ticketsRepository.save(ticket);
+
+    await this.notificationsRepository.create({
+      title: 'Chamado atualizado!',
+      content: `Cliente: ${clientNotificationName}`,
+      recipient_role: 'admin',
+    });
+
+    await this.notificationsRepository.create({
+      title: 'Chamado atualizado!',
+      content: `Cliente: ${clientNotificationName}`,
+      recipient_ids: [ticket.user.id],
+    });
+
+    return updatedTicket;
   }
 }
 
