@@ -60,6 +60,7 @@ export default class TicketsController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
+    const user_id = request.user.id;
     const { ticket_id } = request.params;
     const {
       client_id,
@@ -75,6 +76,7 @@ export default class TicketsController {
     const updateTicket = container.resolve(UpdateTicketsService);
 
     const ticket = await updateTicket.execute({
+      user_id,
       ticket_id,
       client_id,
       client_name,

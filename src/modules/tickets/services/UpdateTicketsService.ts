@@ -1,10 +1,12 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 import Ticket from '../infra/typeorm/entities/Ticket';
 
 interface IRequest {
+  user_id: string;
   ticket_id: string;
   client_id: string;
   client_name: string;
@@ -24,9 +26,13 @@ class UpdateTicketsService {
 
     @inject('NotificationsRepository')
     private notificationsRepository: INotificationsRepository,
+
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
   ) {}
 
   public async execute({
+    user_id,
     ticket_id,
     client_id,
     client_name,
@@ -62,17 +68,23 @@ class UpdateTicketsService {
 
     const updatedTicket = await this.ticketsRepository.save(ticket);
 
-    await this.notificationsRepository.create({
-      title: 'Chamado atualizado!',
-      content: `Cliente: ${clientNotificationName}`,
-      recipient_role: 'admin',
-    });
+    const admins = await this.usersRepository.listAllUsers();
+    const filteredAdmins = admins.filter(user => user.id !== user_id);
+    const mapAdmins = filteredAdmins.map(user => user.id);
 
     await this.notificationsRepository.create({
       title: 'Chamado atualizado!',
       content: `Cliente: ${clientNotificationName}`,
-      recipient_ids: [ticket.user.id],
+      recipient_ids: mapAdmins,
     });
+
+    if (user_id !== ticket.user.id) {
+      await this.notificationsRepository.create({
+        title: 'Chamado atualizado!',
+        content: `Cliente: ${clientNotificationName}`,
+        recipient_ids: [ticket.user.id],
+      });
+    }
 
     return updatedTicket;
   }

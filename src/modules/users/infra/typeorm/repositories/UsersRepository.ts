@@ -54,6 +54,21 @@ class UsersRepository implements IUsersRepository {
   public async save(user: User): Promise<User> {
     return this.ormRepository.save(user);
   }
+
+  public async listAllUsers(role?: string): Promise<User[]> {
+    let users;
+
+    if (role) {
+      users = this.ormRepository.find({
+        select: ['id'],
+        where: { role: 'admin' },
+      });
+    } else {
+      users = this.ormRepository.find({ select: ['id'] });
+    }
+
+    return users;
+  }
 }
 
 export default UsersRepository;
