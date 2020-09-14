@@ -76,6 +76,7 @@ class UpdateTicketsService {
       title: 'Chamado atualizado!',
       content: `Cliente: ${clientNotificationName}`,
       recipient_ids: mapAdmins,
+      ticket_id: updatedTicket.id,
     });
 
     if (user_id !== ticket.user.id) {
@@ -83,6 +84,7 @@ class UpdateTicketsService {
         title: 'Chamado atualizado!',
         content: `Cliente: ${clientNotificationName}`,
         recipient_ids: [ticket.user.id],
+        ticket_id: updatedTicket.id,
       });
     }
 

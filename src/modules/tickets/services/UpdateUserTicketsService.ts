@@ -70,6 +70,7 @@ class UpdateUserTicketsService {
       title: 'Chamado atualizado!',
       content: `Cliente: ${clientNotificationName}`,
       recipient_ids: mapAdmins,
+      ticket_id: updatedTicket.id,
     });
 
     return updatedTicket;

@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 
 interface IRequest {
@@ -11,6 +12,9 @@ class DeleteTicketsService {
   constructor(
     @inject('TicketsRepository')
     private ticketsRepository: ITicketsRepository,
+
+    @inject('NotificationsRepository')
+    private notificationsRepository: INotificationsRepository,
   ) {}
 
   public async execute({ ticket_id }: IRequest): Promise<void> {
@@ -20,7 +24,13 @@ class DeleteTicketsService {
       throw new AppError('Ticket does not exits');
     }
 
-    this.ticketsRepository.delete(ticket);
+    const notifications = await this.notificationsRepository.findByTicketId(
+      ticket_id,
+    );
+
+    if (notifications) {
+      await this.notificationsRepository.deleteArray(notifications);
+    }
   }
 }
 

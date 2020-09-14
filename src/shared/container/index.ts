@@ -20,6 +20,11 @@ container.registerSingleton<IUsersRepository>(
   UsersRepository,
 );
 
+container.registerSingleton<ITicketsRepository>(
+  'TicketsRepository',
+  TicketsRepository,
+);
+
 container.registerSingleton<IUserTokensRepository>(
   'UserTokensRepository',
   UserTokensRepository,
@@ -28,9 +33,4 @@ container.registerSingleton<IUserTokensRepository>(
 container.registerSingleton<INotificationsRepository>(
   'NotificationsRepository',
   NotificationsRepository,
-);
-
-container.registerSingleton<ITicketsRepository>(
-  'TicketsRepository',
-  TicketsRepository,
 );

@@ -19,6 +19,15 @@ class Notification {
   content: string;
 
   @Column()
+  send_after: Date;
+
+  @Column()
+  one_signal_id: Date;
+
+  @Column()
+  ticket_id: Date;
+
+  @Column()
   recipient_role: string;
 
   @Column('uuid')
