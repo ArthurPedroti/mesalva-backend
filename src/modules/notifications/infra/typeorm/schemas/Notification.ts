@@ -25,6 +25,9 @@ class Notification {
   one_signal_id: Date;
 
   @Column()
+  schedule: boolean;
+
+  @Column()
   ticket_id: Date;
 
   @Column()

@@ -6,4 +6,5 @@ export default interface INotificationsRepository {
   create(data: ICreateNotificationDTO): Promise<Notification>;
   findByTicketId(ticket_id: string): Promise<ObjectID[] | undefined>;
   deleteArray(data: ObjectID[]): Promise<void>;
+  deleteOnlyScheduledArray(data: ObjectID[]): Promise<void>;
 }

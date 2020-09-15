@@ -68,6 +68,7 @@ class NotificationsRepository implements INotificationsRepository {
       content,
       send_after,
       one_signal_id: onesignalNotification.data.id,
+      schedule: !!send_after,
       ticket_id,
       recipient_role,
       recipient_ids,
@@ -98,14 +99,38 @@ class NotificationsRepository implements INotificationsRepository {
         await this.ormRepository.remove(notification);
       }
 
-      await axios({
-        method: 'DELETE',
-        url: `https://onesignal.com/api/v1/notifications/${notification?.one_signal_id}?app_id=${process.env.ONE_SIGNAL_APP_ID}`,
-        headers: {
-          Authorization: process.env.ONE_SIGNAL_KEY,
-          'Content-Type': 'application/json',
-        },
-      });
+      if (notification?.one_signal_id) {
+        await axios({
+          method: 'DELETE',
+          url: `https://onesignal.com/api/v1/notifications/${notification?.one_signal_id}?app_id=${process.env.ONE_SIGNAL_APP_ID}`,
+          headers: {
+            Authorization: process.env.ONE_SIGNAL_KEY,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+    });
+
+    Promise.all(result);
+  }
+
+  public async deleteOnlyScheduledArray(data: ObjectID[]): Promise<void> {
+    const result = data.map(async id => {
+      const notification = await this.ormRepository.findOne(id);
+
+      if (notification?.schedule) {
+        await this.ormRepository.remove(notification);
+      }
+      if (notification?.one_signal_id) {
+        await axios({
+          method: 'DELETE',
+          url: `https://onesignal.com/api/v1/notifications/${notification?.one_signal_id}?app_id=${process.env.ONE_SIGNAL_APP_ID}`,
+          headers: {
+            Authorization: process.env.ONE_SIGNAL_KEY,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
     });
 
     Promise.all(result);
