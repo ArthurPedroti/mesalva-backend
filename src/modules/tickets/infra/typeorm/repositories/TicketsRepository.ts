@@ -36,6 +36,17 @@ class TicketsRepository implements ITicketsRepository {
 
   public async findAll(status: object[]): Promise<Ticket[]> {
     const statusArray = status;
+    // const whereArray = status.map(statusItem => {
+    //   const statusFiltered = {
+    //     ...statusItem,
+    //     canceled,
+    //   };
+    //   return statusFiltered;
+    // });
+    // whereArray = [
+    //   { status: 'Não atendido', canceled: false },
+    //   { status: 'Em atendimento', canceled: false },
+    // ]
 
     const tickets = await this.ormRepository.find({
       where: statusArray,

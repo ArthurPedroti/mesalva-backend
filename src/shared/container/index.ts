@@ -15,14 +15,12 @@ import NotificationsRepository from '@modules/notifications/infra/typeorm/reposi
 import ITicketsRepository from '@modules/tickets/repositories/ITicketsRepository';
 import TicketsRepository from '@modules/tickets/infra/typeorm/repositories/TicketsRepository';
 
+import ITicketUpdatesRepository from '@modules/ticketupdates/repositories/ITicketUpdatesRepository';
+import TicketUpdatesRepository from '@modules/ticketupdates/infra/typeorm/repositories/TicketUpdatesRepository';
+
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
-);
-
-container.registerSingleton<ITicketsRepository>(
-  'TicketsRepository',
-  TicketsRepository,
 );
 
 container.registerSingleton<IUserTokensRepository>(
@@ -33,4 +31,14 @@ container.registerSingleton<IUserTokensRepository>(
 container.registerSingleton<INotificationsRepository>(
   'NotificationsRepository',
   NotificationsRepository,
+);
+
+container.registerSingleton<ITicketsRepository>(
+  'TicketsRepository',
+  TicketsRepository,
+);
+
+container.registerSingleton<ITicketUpdatesRepository>(
+  'TicketUpdatesRepository',
+  TicketUpdatesRepository,
 );

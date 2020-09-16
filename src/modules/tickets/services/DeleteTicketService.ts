@@ -31,6 +31,9 @@ class DeleteTicketsService {
     if (notifications) {
       await this.notificationsRepository.deleteArray(notifications);
     }
+
+    ticket.status = 'Cancelado';
+    await this.ticketsRepository.save(ticket);
   }
 }
 

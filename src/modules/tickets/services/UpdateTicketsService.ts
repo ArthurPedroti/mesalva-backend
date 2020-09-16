@@ -69,16 +69,9 @@ class UpdateTicketsService {
 
     const updatedTicket = await this.ticketsRepository.save(ticket);
 
-    const admins = await this.usersRepository.listAllUsers();
-    const filteredAdmins = admins.filter(user => user.id !== user_id);
+    const users = await this.usersRepository.listAllUsers();
+    const filteredAdmins = users.filter(user => user.id !== user_id);
     const mapAdmins = filteredAdmins.map(user => user.id);
-
-    await this.notificationsRepository.create({
-      title: 'Chamado atualizado!',
-      content: `Cliente: ${clientNotificationName}`,
-      recipient_ids: mapAdmins,
-      ticket_id: updatedTicket.id,
-    });
 
     // user owner notification
     if (user_id !== ticket.user.id) {
@@ -89,6 +82,14 @@ class UpdateTicketsService {
         ticket_id: updatedTicket.id,
       });
     }
+
+    // admin notification
+    await this.notificationsRepository.create({
+      title: 'Chamado atualizado!',
+      content: `Cliente: ${clientNotificationName}`,
+      recipient_ids: mapAdmins,
+      ticket_id: updatedTicket.id,
+    });
 
     const notifications = await this.notificationsRepository.findByTicketId(
       ticket_id,

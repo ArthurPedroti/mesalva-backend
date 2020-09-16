@@ -7,7 +7,7 @@ import DeleteTicketsService from '@modules/tickets/services/DeleteTicketService'
 
 export default class TicketsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { attended } = request.query;
+    const { attended, canceled } = request.query;
     let status = [
       { status: 'Atendido' },
       { status: 'Não atendido' },
@@ -15,11 +15,15 @@ export default class TicketsController {
     ];
 
     if (attended) {
-      if (attended === 'yes') {
+      if (attended === 'true') {
         status = [{ status: 'Atendido' }];
       } else {
         status = [{ status: 'Não atendido' }, { status: 'Em atendimento' }];
       }
+    }
+
+    if (canceled === 'true') {
+      status = [...status, { status: 'Cancelado' }];
     }
 
     const listTickets = container.resolve(ListTicketsService);

@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import { addDays, differenceInMilliseconds, subMilliseconds } from 'date-fns';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 import Ticket from '../infra/typeorm/entities/Ticket';
 
@@ -66,12 +67,67 @@ class UpdateUserTicketsService {
     const filteredAdmins = admins.filter(user => user.id !== user_id);
     const mapAdmins = filteredAdmins.map(user => user.id);
 
+    // admin notification
     await this.notificationsRepository.create({
       title: 'Chamado atualizado!',
       content: `Cliente: ${clientNotificationName}`,
       recipient_ids: mapAdmins,
       ticket_id: updatedTicket.id,
     });
+
+    const notifications = await this.notificationsRepository.findByTicketId(
+      ticket_id,
+    );
+
+    if (type && notifications) {
+      this.notificationsRepository.deleteOnlyScheduledArray(notifications);
+      const millisecondsDifference = differenceInMilliseconds(
+        ticket.created_at,
+        Date.now(),
+      );
+
+      // if not stoped machine notifications
+      if (type === 'Máquina não parada') {
+        // admin notification
+        await this.notificationsRepository.create({
+          title: 'Um chamado se tornou crítico!',
+          content: `Cliente: ${clientNotificationName}`,
+          recipient_ids: mapAdmins,
+          ticket_id: ticket.id,
+          send_after: subMilliseconds(
+            addDays(ticket.created_at, 20),
+            millisecondsDifference,
+          ),
+        });
+
+        // admin notification
+        await this.notificationsRepository.create({
+          title: 'Um chamado se tornou urgente!',
+          content: `Cliente: ${clientNotificationName}`,
+          recipient_ids: mapAdmins,
+          ticket_id: ticket.id,
+          send_after: subMilliseconds(
+            addDays(ticket.created_at, 28),
+            millisecondsDifference,
+          ),
+        });
+      }
+
+      // if stoped machine notifications
+      if (type === 'Máquina parada') {
+        // admin notification
+        await this.notificationsRepository.create({
+          title: 'Um chamado se tornou urgente!',
+          content: `Cliente: ${clientNotificationName}`,
+          recipient_ids: mapAdmins,
+          ticket_id: ticket.id,
+          send_after: subMilliseconds(
+            addDays(ticket.created_at, 8),
+            millisecondsDifference,
+          ),
+        });
+      }
+    }
 
     return updatedTicket;
   }
