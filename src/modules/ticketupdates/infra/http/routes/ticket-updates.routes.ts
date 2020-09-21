@@ -23,8 +23,9 @@ ticketUpdatesRouter.post(
   celebrate({
     [Segments.BODY]: {
       ticket_id: Joi.string().required(),
+      title: Joi.string().required(),
       flag: Joi.string(),
-      description: Joi.string().required(),
+      description: Joi.string(),
     },
   }),
   ticketUpdatesController.create,
@@ -35,8 +36,9 @@ ticketUpdatesRouter.put(
   celebrate({
     [Segments.BODY]: {
       ticket_update_id: Joi.string().required(),
+      title: Joi.string().required(),
       flag: Joi.string(),
-      description: Joi.string().required(),
+      description: Joi.string(),
     },
   }),
   ticketUpdatesController.update,

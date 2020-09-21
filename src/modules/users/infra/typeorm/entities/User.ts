@@ -23,6 +23,9 @@ class User {
   @Column()
   role: string;
 
+  @Column('varchar', { array: true })
+  department: string[];
+
   @Column()
   @Exclude()
   password: string;

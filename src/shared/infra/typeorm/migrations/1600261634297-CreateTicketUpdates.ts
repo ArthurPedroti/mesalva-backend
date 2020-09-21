@@ -29,6 +29,10 @@ export default class CreateTicketUpdates1600261634297
             type: 'uuid',
           },
           {
+            name: 'title',
+            type: 'varchar',
+          },
+          {
             name: 'flag',
             type: 'varchar',
             isNullable: true,

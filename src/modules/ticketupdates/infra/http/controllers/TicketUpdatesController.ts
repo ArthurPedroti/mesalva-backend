@@ -18,13 +18,14 @@ export default class TicketUpdatesController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
-    const { ticket_id, flag, description } = request.body;
+    const { ticket_id, title, flag, description } = request.body;
 
     const createTicketUpdate = container.resolve(CreateTicketUpdateService);
 
     const ticket_update = await createTicketUpdate.execute({
       user_id,
       ticket_id,
+      title,
       flag,
       description,
     });
@@ -34,13 +35,14 @@ export default class TicketUpdatesController {
 
   public async update(request: Request, response: Response): Promise<Response> {
     const user_id = request.user.id;
-    const { ticket_update_id, flag, description } = request.body;
+    const { ticket_update_id, title, flag, description } = request.body;
 
     const createTicketUpdate = container.resolve(UpdateTicketUpdatesService);
 
     const ticket_update = await createTicketUpdate.execute({
       user_id,
       ticket_update_id,
+      title,
       flag,
       description,
     });

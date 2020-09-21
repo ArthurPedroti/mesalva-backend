@@ -8,6 +8,7 @@ import TicketUpdate from '../infra/typeorm/entities/TicketUpdate';
 interface IRequest {
   user_id: string;
   ticket_id: string;
+  title: string;
   flag?: string;
   description: string;
 }
@@ -28,6 +29,7 @@ class CreateTicketUpdateService {
   public async execute({
     user_id,
     ticket_id,
+    title,
     flag,
     description,
   }: IRequest): Promise<TicketUpdate> {
@@ -38,6 +40,7 @@ class CreateTicketUpdateService {
     const ticket_update_created = await this.ticketUpdatesRepository.create({
       user_id,
       ticket_id,
+      title,
       flag,
       description,
     });

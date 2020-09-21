@@ -8,6 +8,7 @@ import TicketUpdate from '../infra/typeorm/entities/TicketUpdate';
 interface IRequest {
   user_id: string;
   ticket_update_id: string;
+  title: string;
   flag: string;
   description: string;
 }
@@ -28,6 +29,7 @@ class UpdateTicketUpdatesService {
   public async execute({
     user_id,
     ticket_update_id,
+    title,
     flag,
     description,
   }: IRequest): Promise<TicketUpdate> {
@@ -39,6 +41,7 @@ class UpdateTicketUpdatesService {
       throw new AppError('TicketUpdate does not exits');
     }
 
+    ticket_update.title = title;
     ticket_update.flag = flag;
     ticket_update.description = description;
 

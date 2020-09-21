@@ -30,6 +30,9 @@ class TicketUpdate {
   ticket: Ticket;
 
   @Column()
+  title: string;
+
+  @Column()
   flag: string;
 
   @Column()

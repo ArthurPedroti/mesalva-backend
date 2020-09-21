@@ -13,12 +13,14 @@ class TicketUpdatesRepository implements ITicketUpdatesRepository {
   public async create({
     user_id,
     ticket_id,
+    title,
     flag,
     description,
   }: ICreateTicketUpdateDTO): Promise<TicketUpdate> {
     const ticket = this.ormRepository.create({
       user_id,
       ticket_id,
+      title,
       flag,
       description,
     });
