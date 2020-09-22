@@ -40,6 +40,7 @@ export default class CreateTicketUpdates1600261634297
           {
             name: 'description',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'created_at',
