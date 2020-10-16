@@ -69,8 +69,8 @@ class UpdateTicketsService {
 
     const updatedTicket = await this.ticketsRepository.save(ticket);
 
-    const users = await this.usersRepository.listAllUsers();
-    const filteredAdmins = users.filter(user => user.id !== user_id);
+    const admins = await this.usersRepository.listAllUsers('admin');
+    const filteredAdmins = admins.filter(user => user.id !== user_id);
     const mapAdmins = filteredAdmins.map(user => user.id);
 
     // user owner notification
@@ -84,12 +84,14 @@ class UpdateTicketsService {
     }
 
     // admin notification
-    await this.notificationsRepository.create({
-      title: 'Chamado atualizado!',
-      content: `Cliente: ${clientNotificationName}`,
-      recipient_ids: mapAdmins,
-      ticket_id: updatedTicket.id,
-    });
+    if (mapAdmins.length > 0) {
+      await this.notificationsRepository.create({
+        title: 'Chamado atualizado!',
+        content: `Cliente: ${clientNotificationName}`,
+        recipient_ids: mapAdmins,
+        ticket_id: updatedTicket.id,
+      });
+    }
 
     const notifications = await this.notificationsRepository.findByTicketId(
       ticket_id,
@@ -105,16 +107,18 @@ class UpdateTicketsService {
       // if not stoped machine notifications
       if (type === 'Máquina não parada') {
         // admin notification
-        await this.notificationsRepository.create({
-          title: 'Um chamado se tornou crítico!',
-          content: `Cliente: ${clientNotificationName}`,
-          recipient_ids: mapAdmins,
-          ticket_id: ticket.id,
-          send_after: subMilliseconds(
-            addDays(ticket.created_at, 20),
-            millisecondsDifference,
-          ),
-        });
+        if (mapAdmins.length > 0) {
+          await this.notificationsRepository.create({
+            title: 'Um chamado se tornou crítico!',
+            content: `Cliente: ${clientNotificationName}`,
+            recipient_ids: mapAdmins,
+            ticket_id: ticket.id,
+            send_after: subMilliseconds(
+              addDays(ticket.created_at, 20),
+              millisecondsDifference,
+            ),
+          });
+        }
 
         // user notification
         await this.notificationsRepository.create({
@@ -129,16 +133,18 @@ class UpdateTicketsService {
         });
 
         // admin notification
-        await this.notificationsRepository.create({
-          title: 'Um chamado se tornou urgente!',
-          content: `Cliente: ${clientNotificationName}`,
-          recipient_ids: mapAdmins,
-          ticket_id: ticket.id,
-          send_after: subMilliseconds(
-            addDays(ticket.created_at, 28),
-            millisecondsDifference,
-          ),
-        });
+        if (mapAdmins.length > 0) {
+          await this.notificationsRepository.create({
+            title: 'Um chamado se tornou urgente!',
+            content: `Cliente: ${clientNotificationName}`,
+            recipient_ids: mapAdmins,
+            ticket_id: ticket.id,
+            send_after: subMilliseconds(
+              addDays(ticket.created_at, 28),
+              millisecondsDifference,
+            ),
+          });
+        }
 
         // user notification
         await this.notificationsRepository.create({
@@ -156,16 +162,18 @@ class UpdateTicketsService {
       // if stoped machine notifications
       if (type === 'Máquina parada') {
         // admin notification
-        await this.notificationsRepository.create({
-          title: 'Um chamado se tornou urgente!',
-          content: `Cliente: ${clientNotificationName}`,
-          recipient_ids: mapAdmins,
-          ticket_id: ticket.id,
-          send_after: subMilliseconds(
-            addDays(ticket.created_at, 8),
-            millisecondsDifference,
-          ),
-        });
+        if (mapAdmins.length > 0) {
+          await this.notificationsRepository.create({
+            title: 'Um chamado se tornou urgente!',
+            content: `Cliente: ${clientNotificationName}`,
+            recipient_ids: mapAdmins,
+            ticket_id: ticket.id,
+            send_after: subMilliseconds(
+              addDays(ticket.created_at, 8),
+              millisecondsDifference,
+            ),
+          });
+        }
 
         await this.notificationsRepository.create({
           // user notification

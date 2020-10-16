@@ -34,7 +34,7 @@ class TicketUpdatesRepository implements ITicketUpdatesRepository {
     const ticket_updates = await this.ormRepository.find({
       where: { ticket_id },
       order: {
-        created_at: 'DESC',
+        created_at: 'ASC',
       },
       relations: ['user', 'ticket'],
     });

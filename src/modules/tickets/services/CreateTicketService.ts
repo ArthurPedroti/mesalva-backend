@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import { addDays } from 'date-fns';
+import ITicketUpdatesRepository from '@modules/ticketupdates/repositories/ITicketUpdatesRepository';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 import Ticket from '../infra/typeorm/entities/Ticket';
 
@@ -28,6 +29,9 @@ class CreateTicketService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('TicketUpdatesRepository')
+    private ticketUpdatesRepository: ITicketUpdatesRepository,
   ) {}
 
   public async execute({
@@ -52,7 +56,7 @@ class CreateTicketService {
       classificationDefault = classification;
     }
 
-    const admins = await this.usersRepository.listAllUsers();
+    const admins = await this.usersRepository.listAllUsers('admin');
     const filteredAdmins = admins.filter(user => user.id !== user_id);
     const mapAdmins = filteredAdmins.map(user => user.id);
 
@@ -69,23 +73,27 @@ class CreateTicketService {
     });
 
     // ticket created admins notification
-    await this.notificationsRepository.create({
-      title: `Novo chamado! - ${type}`,
-      content: `Cliente: ${client_name}`,
-      recipient_ids: mapAdmins,
-      ticket_id: ticket.id,
-    });
+    if (mapAdmins.length > 0) {
+      await this.notificationsRepository.create({
+        title: `Novo chamado! - ${type}`,
+        content: `Cliente: ${client_name}`,
+        recipient_ids: mapAdmins,
+        ticket_id: ticket.id,
+      });
+    }
 
     // if not stoped machine notifications
     if (type === 'Máquina não parada') {
       // admin notification
-      await this.notificationsRepository.create({
-        title: 'Um chamado se tornou crítico!',
-        content: `Cliente: ${client_name}`,
-        recipient_ids: mapAdmins,
-        ticket_id: ticket.id,
-        send_after: addDays(ticket.created_at, 20),
-      });
+      if (mapAdmins.length > 0) {
+        await this.notificationsRepository.create({
+          title: 'Um chamado se tornou crítico!',
+          content: `Cliente: ${client_name}`,
+          recipient_ids: mapAdmins,
+          ticket_id: ticket.id,
+          send_after: addDays(ticket.created_at, 20),
+        });
+      }
 
       // user notification
       await this.notificationsRepository.create({
@@ -97,13 +105,15 @@ class CreateTicketService {
       });
 
       // admin notification
-      await this.notificationsRepository.create({
-        title: 'Um chamado se tornou urgente!',
-        content: `Cliente: ${client_name}`,
-        recipient_ids: mapAdmins,
-        ticket_id: ticket.id,
-        send_after: addDays(ticket.created_at, 28),
-      });
+      if (mapAdmins.length > 0) {
+        await this.notificationsRepository.create({
+          title: 'Um chamado se tornou urgente!',
+          content: `Cliente: ${client_name}`,
+          recipient_ids: mapAdmins,
+          ticket_id: ticket.id,
+          send_after: addDays(ticket.created_at, 28),
+        });
+      }
 
       // user notification
       await this.notificationsRepository.create({
@@ -118,13 +128,15 @@ class CreateTicketService {
     // if stoped machine notifications
     if (type === 'Máquina parada') {
       // admin notification
-      await this.notificationsRepository.create({
-        title: 'Um chamado se tornou urgente!',
-        content: `Cliente: ${client_name}`,
-        recipient_ids: mapAdmins,
-        ticket_id: ticket.id,
-        send_after: addDays(ticket.created_at, 8),
-      });
+      if (mapAdmins.length > 0) {
+        await this.notificationsRepository.create({
+          title: 'Um chamado se tornou urgente!',
+          content: `Cliente: ${client_name}`,
+          recipient_ids: mapAdmins,
+          ticket_id: ticket.id,
+          send_after: addDays(ticket.created_at, 8),
+        });
+      }
 
       await this.notificationsRepository.create({
         // user notification
@@ -135,6 +147,12 @@ class CreateTicketService {
         send_after: addDays(ticket.created_at, 8),
       });
     }
+
+    await this.ticketUpdatesRepository.create({
+      user_id,
+      ticket_id: ticket.id,
+      title: 'Aguardando classificação',
+    });
 
     return ticket;
   }

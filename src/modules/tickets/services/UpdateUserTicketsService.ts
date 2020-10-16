@@ -63,7 +63,7 @@ class UpdateUserTicketsService {
 
     const updatedTicket = await this.ticketsRepository.save(ticket);
 
-    const admins = await this.usersRepository.listAllUsers();
+    const admins = await this.usersRepository.listAllUsers('admin');
     const filteredAdmins = admins.filter(user => user.id !== user_id);
     const mapAdmins = filteredAdmins.map(user => user.id);
 
@@ -89,43 +89,49 @@ class UpdateUserTicketsService {
       // if not stoped machine notifications
       if (type === 'Máquina não parada') {
         // admin notification
-        await this.notificationsRepository.create({
-          title: 'Um chamado se tornou crítico!',
-          content: `Cliente: ${clientNotificationName}`,
-          recipient_ids: mapAdmins,
-          ticket_id: ticket.id,
-          send_after: subMilliseconds(
-            addDays(ticket.created_at, 20),
-            millisecondsDifference,
-          ),
-        });
+        if (mapAdmins.length > 0) {
+          await this.notificationsRepository.create({
+            title: 'Um chamado se tornou crítico!',
+            content: `Cliente: ${clientNotificationName}`,
+            recipient_ids: mapAdmins,
+            ticket_id: ticket.id,
+            send_after: subMilliseconds(
+              addDays(ticket.created_at, 20),
+              millisecondsDifference,
+            ),
+          });
+        }
 
         // admin notification
-        await this.notificationsRepository.create({
-          title: 'Um chamado se tornou urgente!',
-          content: `Cliente: ${clientNotificationName}`,
-          recipient_ids: mapAdmins,
-          ticket_id: ticket.id,
-          send_after: subMilliseconds(
-            addDays(ticket.created_at, 28),
-            millisecondsDifference,
-          ),
-        });
+        if (mapAdmins.length > 0) {
+          await this.notificationsRepository.create({
+            title: 'Um chamado se tornou urgente!',
+            content: `Cliente: ${clientNotificationName}`,
+            recipient_ids: mapAdmins,
+            ticket_id: ticket.id,
+            send_after: subMilliseconds(
+              addDays(ticket.created_at, 28),
+              millisecondsDifference,
+            ),
+          });
+        }
       }
 
       // if stoped machine notifications
       if (type === 'Máquina parada') {
         // admin notification
-        await this.notificationsRepository.create({
-          title: 'Um chamado se tornou urgente!',
-          content: `Cliente: ${clientNotificationName}`,
-          recipient_ids: mapAdmins,
-          ticket_id: ticket.id,
-          send_after: subMilliseconds(
-            addDays(ticket.created_at, 8),
-            millisecondsDifference,
-          ),
-        });
+        if (mapAdmins.length > 0) {
+          await this.notificationsRepository.create({
+            title: 'Um chamado se tornou urgente!',
+            content: `Cliente: ${clientNotificationName}`,
+            recipient_ids: mapAdmins,
+            ticket_id: ticket.id,
+            send_after: subMilliseconds(
+              addDays(ticket.created_at, 8),
+              millisecondsDifference,
+            ),
+          });
+        }
       }
     }
 
