@@ -13,7 +13,7 @@ const clientsController = new ClientsController();
 const productsController = new ProductsController();
 
 ticketsRouter.get('/clients', clientsController.index);
-ticketsRouter.get('/products', productsController.index);
+// ticketsRouter.get('/products', productsController.index);
 ticketsRouter.use(ensureAuthenticated);
 
 ticketsRouter.get('/', ticketsController.index);
