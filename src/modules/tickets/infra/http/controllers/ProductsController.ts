@@ -6,7 +6,13 @@ export default class ProductsController {
     const products = await axios.get(
       `${process.env.APP_PROTHEUS_API_URL}/products`,
       {
-        headers: request.headers,
+        headers: {
+          ...request.headers,
+          host: `${process.env.APP_PROTHEUS_API_URL}`.replace(
+            /(^\w+:|^)\/\//,
+            '',
+          ),
+        },
         params: request.params,
       },
     );
