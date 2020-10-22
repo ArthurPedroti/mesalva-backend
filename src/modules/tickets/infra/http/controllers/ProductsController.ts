@@ -1,16 +1,16 @@
 import { Response, Request } from 'express';
 import axios from 'axios';
 
-export default class ClientsController {
+export default class ProductsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const clients = await axios.get(
-      `${process.env.APP_PROTHEUS_API_URL}/clients`,
+    const products = await axios.get(
+      `${process.env.APP_PROTHEUS_API_URL}/products`,
       {
         headers: request.headers,
         params: request.params,
       },
     );
 
-    return response.json(clients.data);
+    return response.json(products.data);
   }
 }

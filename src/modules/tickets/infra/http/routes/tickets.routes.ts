@@ -4,13 +4,16 @@ import { celebrate, Segments, Joi } from 'celebrate';
 import TicketsController from '../controllers/TicketsController';
 import UserTicketsController from '../controllers/UserTicketsController';
 import ClientsController from '../controllers/ClientsController';
+import ProductsController from '../controllers/ProductsController';
 
 const ticketsRouter = Router();
 const ticketsController = new TicketsController();
 const userTicketsController = new UserTicketsController();
 const clientsController = new ClientsController();
+const productsController = new ProductsController();
 
 ticketsRouter.get('/clients', clientsController.index);
+ticketsRouter.get('/products', productsController.index);
 ticketsRouter.use(ensureAuthenticated);
 
 ticketsRouter.get('/', ticketsController.index);
