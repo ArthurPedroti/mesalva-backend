@@ -7,7 +7,7 @@ export default class ProductsController {
       `${process.env.APP_PROTHEUS_API_URL}/products`,
       {
         headers: request.headers,
-        params: request.params,
+        // params: request.params,
       },
     );
 
