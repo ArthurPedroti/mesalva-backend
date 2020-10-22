@@ -10,10 +10,10 @@ const ticketsController = new TicketsController();
 const userTicketsController = new UserTicketsController();
 const clientsController = new ClientsController();
 
+ticketsRouter.get('/clients', clientsController.index);
 ticketsRouter.use(ensureAuthenticated);
 
 ticketsRouter.get('/', ticketsController.index);
-ticketsRouter.get('/clients', clientsController.index);
 
 ticketsRouter.post(
   '/',
