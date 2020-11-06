@@ -46,7 +46,7 @@ ticketsRouter.put(
       classification: Joi.string(),
       equipment: Joi.string(),
       type: Joi.string(),
-      status: Joi.string(),
+      sector: Joi.string(),
       description: Joi.string(),
     },
   }),

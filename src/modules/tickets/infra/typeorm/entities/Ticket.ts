@@ -43,6 +43,9 @@ class Ticket {
   status: string;
 
   @Column()
+  sector: string;
+
+  @Column()
   description: string;
 
   @CreateDateColumn()

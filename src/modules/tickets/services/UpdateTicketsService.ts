@@ -3,6 +3,7 @@ import AppError from '@shared/errors/AppError';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import { addDays, differenceInMilliseconds, subMilliseconds } from 'date-fns';
+import ITicketUpdatesRepository from '@modules/ticketupdates/repositories/ITicketUpdatesRepository';
 import ITicketsRepository from '../repositories/ITicketsRepository';
 import Ticket from '../infra/typeorm/entities/Ticket';
 
@@ -15,7 +16,7 @@ interface IRequest {
   classification: string;
   equipment: string;
   type: string;
-  status: string;
+  sector: string;
   description: string;
 }
 
@@ -30,6 +31,9 @@ class UpdateTicketsService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('TicketUpdatesRepository')
+    private ticketUpdatesRepository: ITicketUpdatesRepository,
   ) {}
 
   public async execute({
@@ -41,7 +45,7 @@ class UpdateTicketsService {
     classification,
     equipment,
     type,
-    status,
+    sector,
     description,
   }: IRequest): Promise<Ticket> {
     const ticket = await this.ticketsRepository.findById(ticket_id);
@@ -64,10 +68,29 @@ class UpdateTicketsService {
     ticket.classification = classification;
     ticket.equipment = equipment;
     ticket.type = type;
-    ticket.status = status;
+    ticket.sector = sector;
     ticket.description = description;
 
     const updatedTicket = await this.ticketsRepository.save(ticket);
+
+    const ticket_updates = await this.ticketUpdatesRepository.findByTicket(
+      ticket_id,
+    );
+
+    const classificationTicketUpdate = ticket_updates.find(
+      item => item.title === 'Classificado',
+    );
+
+    if (!classificationTicketUpdate) {
+      await this.ticketUpdatesRepository.create({
+        user_id,
+        ticket_id,
+        title: 'Classificado',
+      });
+
+      ticket.status = 'Em atendimento';
+      await this.ticketsRepository.save(ticket);
+    }
 
     const admins = await this.usersRepository.listAllUsers('admin');
     const filteredAdmins = admins.filter(user => user.id !== user_id);

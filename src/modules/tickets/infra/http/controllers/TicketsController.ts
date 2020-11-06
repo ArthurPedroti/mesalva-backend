@@ -7,23 +7,11 @@ import DeleteTicketsService from '@modules/tickets/services/DeleteTicketService'
 
 export default class TicketsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { attended, canceled } = request.query;
-    let status = [
-      { status: 'Atendido' },
-      { status: 'Não atendido' },
-      { status: 'Em atendimento' },
-    ];
+    const { canceled } = request.query;
 
-    if (attended) {
-      if (attended === 'true') {
-        status = [{ status: 'Atendido' }];
-      } else {
-        status = [{ status: 'Não atendido' }, { status: 'Em atendimento' }];
-      }
-    }
-
+    let status = [{}];
     if (canceled === 'true') {
-      status = [...status, { status: 'Cancelado' }];
+      status = [{ status: 'Cancelado' }];
     }
 
     const listTickets = container.resolve(ListTicketsService);
@@ -42,7 +30,6 @@ export default class TicketsController {
       classification,
       equipment,
       type,
-      status,
       description,
     } = request.body;
 
@@ -56,7 +43,6 @@ export default class TicketsController {
       classification,
       equipment,
       type,
-      status,
       description,
     });
 
@@ -73,7 +59,7 @@ export default class TicketsController {
       classification,
       equipment,
       type,
-      status,
+      sector,
       description,
     } = request.body;
 
@@ -88,7 +74,7 @@ export default class TicketsController {
       classification,
       equipment,
       type,
-      status,
+      sector,
       description,
     });
 

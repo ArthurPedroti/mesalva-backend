@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
+import ITicketsRepository from '@modules/tickets/repositories/ITicketsRepository';
 import ITicketUpdatesRepository from '../repositories/ITicketUpdatesRepository';
 import TicketUpdate from '../infra/typeorm/entities/TicketUpdate';
 
@@ -16,6 +17,9 @@ interface IRequest {
 @injectable()
 class CreateTicketUpdateService {
   constructor(
+    @inject('TicketsRepository')
+    private ticketsRepository: ITicketsRepository,
+
     @inject('TicketUpdatesRepository')
     private ticketUpdatesRepository: ITicketUpdatesRepository,
 
@@ -51,6 +55,17 @@ class CreateTicketUpdateService {
 
     if (!ticket_update) {
       throw new AppError('An error has occurred at creating a ticket update');
+    }
+
+    if (title === 'Concluído') {
+      const ticket = await this.ticketsRepository.findById(
+        ticket_update.ticket.id,
+      );
+
+      if (ticket) {
+        ticket.status = 'Atendido';
+        await this.ticketsRepository.save(ticket);
+      }
     }
 
     // user owner notification

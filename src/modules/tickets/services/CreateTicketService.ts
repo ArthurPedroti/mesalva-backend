@@ -14,7 +14,6 @@ interface IRequest {
   classification: string;
   equipment: string;
   type: string;
-  status: string;
   description: string;
 }
 
@@ -42,15 +41,9 @@ class CreateTicketService {
     classification,
     equipment,
     type,
-    status,
     description,
   }: IRequest): Promise<Ticket> {
-    let statusDefault = 'Não atendido';
     let classificationDefault = 'Sem classificação';
-
-    if (status) {
-      statusDefault = status;
-    }
 
     if (classification) {
       classificationDefault = classification;
@@ -67,8 +60,8 @@ class CreateTicketService {
       client_cnpj,
       classification: classificationDefault,
       equipment,
+      status: 'Não atendido',
       type,
-      status: statusDefault,
       description,
     });
 
