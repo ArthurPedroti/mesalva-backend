@@ -59,12 +59,12 @@ class UsersRepository implements IUsersRepository {
     let users;
 
     if (role) {
-      users = this.ormRepository.find({
+      users = await this.ormRepository.find({
         select: ['id'],
-        where: { role: 'admin' },
+        where: [{ role: 'master' }, { role: 'admin' }],
       });
     } else {
-      users = this.ormRepository.find({ select: ['id'] });
+      users = await this.ormRepository.find({ select: ['id'] });
     }
 
     return users;
