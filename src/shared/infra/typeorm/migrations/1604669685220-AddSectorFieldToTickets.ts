@@ -14,6 +14,6 @@ export default class AddSectorFieldToTickets1604669685220
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropColumn('tickets', 'avatar');
+    await queryRunner.dropColumn('tickets', 'sector');
   }
 }
