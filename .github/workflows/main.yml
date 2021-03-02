@@ -44,4 +44,9 @@ jobs:
           yarn
           yarn typeorm migration:run
           pm2 restart aasm-backend
-      
+
+
+
+
+
+
