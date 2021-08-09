@@ -30,7 +30,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         password: ${{ secrets.SSH_PASS }}
         source: ".,!node_modules"
-        target: "~/app/aasm-backend"
+        target: "~/app/mesalva-backend"
 
     - name: Run production scripts
       uses: appleboy/ssh-action@master
@@ -40,13 +40,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         password: ${{ secrets.SSH_PASS }}
         script: |
-          cd ~/app/aasm-backend
+          cd ~/app/mesalva-backend
           yarn
           yarn typeorm migration:run
-          pm2 restart aasm-backend
-
-
-
-
-
-
+          pm2 restart mesalva-backend
